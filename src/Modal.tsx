@@ -8,6 +8,45 @@ type ModalType = {
 
 export default function Modal({ children, isOpen, onClose }: ModalType) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const prevFocusedElement = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      prevFocusedElement.current = document.activeElement as HTMLElement;
+      const focusableElements =
+        modalRef.current?.querySelectorAll("button, textarea, input, select") ||
+        [];
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[
+        focusableElements.length - 1
+      ] as HTMLElement;
+      if (firstElement) {
+        firstElement.focus();
+      }
+      const handleTab = (e: KeyboardEvent) => {
+        if (e.key === "Tab") {
+          if (modalRef.current) {
+            if (e.shiftKey) {
+              if (document.activeElement === firstElement) {
+                e.preventDefault();
+                lastElement?.focus();
+              }
+            } else {
+              if (document.activeElement === lastElement) {
+                e.preventDefault();
+                firstElement?.focus();
+              }
+            }
+          }
+        }
+      };
+      document.addEventListener("keydown", handleTab);
+      return () => {
+        document.removeEventListener("keydown", handleTab);
+        prevFocusedElement.current?.focus();
+      };
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -30,7 +69,7 @@ export default function Modal({ children, isOpen, onClose }: ModalType) {
   const handleContentClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
-
+  if (!isOpen) return null;
   return (
     <div
       onClick={handleClickOutside}
@@ -38,6 +77,9 @@ export default function Modal({ children, isOpen, onClose }: ModalType) {
     >
       <div
         ref={modalRef}
+        role="dialog"
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
         onClick={handleContentClick}
         className="relative lg:w-2/5 xl:w-2/5 p-6 bg-white rounded-lg"
       >
