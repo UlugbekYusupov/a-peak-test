@@ -14,8 +14,9 @@ export default function Modal({ children, isOpen, onClose }: ModalType) {
     if (isOpen) {
       prevFocusedElement.current = document.activeElement as HTMLElement;
       const focusableElements =
-        modalRef.current?.querySelectorAll("button, textarea, input, select") ||
-        [];
+        modalRef.current?.querySelectorAll(
+          "button, textarea, input, select, [tabindex]"
+        ) || [];
       const firstElement = focusableElements[0] as HTMLElement;
       const lastElement = focusableElements[
         focusableElements.length - 1
