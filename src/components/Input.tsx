@@ -1,13 +1,16 @@
 import React from "react";
+import { Controller } from "react-hook-form";
 
 type TextInputProps = {
   title: string;
   placeholder: string;
-  value: string;
+  value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  type?: "text" | "email" | "password" | "url";
   disabled?: boolean;
   className?: string;
+  control: any;
+  name: string;
+  rules?: object;
   icon?: React.ReactNode;
 };
 
@@ -16,9 +19,11 @@ const TextInput = ({
   placeholder,
   value,
   onChange,
-  type = "text",
   disabled = false,
   className = "",
+  control,
+  name,
+  rules = {},
   icon,
 }: TextInputProps) => {
   return (
@@ -34,15 +39,21 @@ const TextInput = ({
             {icon}
           </div>
         )}
-        <input
-          type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          disabled={disabled}
-          className={`border font-normal text-md text-textColor ${className} rounded-md p-2 w-full ${
-            icon ? "pl-8" : ""
-          } focus:outline-none focus:ring-2 focus:ring-buttonColor disabled:opacity-50`}
+        <Controller
+          name={name}
+          control={control}
+          rules={rules}
+          render={({ field }) => (
+            <input
+              {...field}
+              type="text"
+              placeholder={placeholder}
+              disabled={disabled}
+              className={`border font-normal text-md text-textColor ${className} rounded-md p-2 w-full ${
+                icon ? "pl-8" : ""
+              } focus:outline-none focus:ring-2 focus:ring-buttonColor disabled:opacity-50`}
+            />
+          )}
         />
       </div>
     </div>

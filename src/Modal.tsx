@@ -82,12 +82,12 @@ export default function Modal({ children, isOpen, onClose }: ModalType) {
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
         onClick={handleContentClick}
-        className="relative lg:w-2/5 xl:w-2/5 p-6 bg-white rounded-lg"
+        className="relative md:w-[75%] lg:w-2/5 2xl:w-1/3 p-6 bg-white rounded-lg"
       >
         <button
           aria-label="closebutton"
           onClick={() => onClose()}
-          className="absolute top-5 right-5"
+          className="absolute top-5 right-5 z-10"
         >
           <img
             src="./closebutton.png"
